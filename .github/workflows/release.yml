@@ -135,5 +135,5 @@ jobs:
         id: upload_to_release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "*.7z"
+          artifacts: "*.zst"
           immutableCreate: true
