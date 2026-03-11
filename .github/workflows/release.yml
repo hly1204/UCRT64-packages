@@ -1,0 +1,77 @@
+name: release
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: ucrt-x86_64, sys: UCRT64 }
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.sys }}
+          update: true
+          install: >-
+            patch
+            mingw-w64-${{ matrix.name }}-cc
+            mingw-w64-${{ matrix.name }}-cmake
+            mingw-w64-${{ matrix.name }}-ninja
+            mingw-w64-${{ matrix.name }}-pkgconf
+            mingw-w64-${{ matrix.name }}-zlib
+            mingw-w64-${{ matrix.name }}-zstd
+
+      - name: Import GPG keys
+        shell: msys2 {0}
+        run: |
+          git clone https://github.com/msys2/MSYS2-keyring.git
+          gpg --import MSYS2-keyring/msys2.gpg
+
+      - name: Build qt6-base
+        shell: msys2 {0}
+        run: |
+          cd qt6-base
+          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-base-6.10.1-1.src.tar.zst
+          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-base-6.10.1-1.src.tar.zst.sig
+          gpg --verify \
+              mingw-w64-qt6-base-6.10.1-1.src.tar.zst.sig \
+              mingw-w64-qt6-base-6.10.1-1.src.tar.zst
+          tar -xf mingw-w64-qt6-base-6.10.1-1.src.tar.zst
+          cd mingw-w64-qt6-base
+          rm PKGBUILD
+          cp -pv ../PKGBUILD .
+          makepkg --install \
+                  CC=cc \
+                  CXX=c++ \
+                  PKGDEST=../../packages \
+                  PACKAGER="Huang <hly1204@qq.com>"
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: qt6-base
+          path: ${{ github.workspace }}/packages/*
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          path: ./
+          merge-multiple: true
+
+      - name: Upload to Release
+        id: upload_to_release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "*.7z"
+          immutableCreate: true
