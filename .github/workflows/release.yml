@@ -47,9 +47,70 @@ jobs:
           rm PKGBUILD
           cp -pv ../PKGBUILD .
           makepkg --install \
+                  --noconfirm \
                   CC=cc \
                   CXX=c++ \
-                  PKGDEST=../../packages \
+                  PKGDEST=${PWD}/../../packages \
+                  PACKAGER="Huang <hly1204@qq.com>"
+
+      - name: Build qt6-svg
+        shell: msys2 {0}
+        run: |
+          cd qt6-svg
+          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-svg-6.10.1-1.src.tar.zst
+          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-svg-6.10.1-1.src.tar.zst.sig
+          gpg --verify \
+              mingw-w64-qt6-svg-6.10.1-1.src.tar.zst.sig \
+              mingw-w64-qt6-svg-6.10.1-1.src.tar.zst
+          tar -xf mingw-w64-qt6-svg-6.10.1-1.src.tar.zst
+          cd mingw-w64-qt6-svg
+          rm PKGBUILD
+          cp -pv ../PKGBUILD .
+          makepkg --install \
+                  --noconfirm \
+                  CC=cc \
+                  CXX=c++ \
+                  PKGDEST=${PWD}/../../packages \
+                  PACKAGER="Huang <hly1204@qq.com>"
+
+      - name: Build qt6-tools
+        shell: msys2 {0}
+        run: |
+          cd qt6-tools
+          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-tools-6.10.1-1.src.tar.zst
+          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-tools-6.10.1-1.src.tar.zst.sig
+          gpg --verify \
+              mingw-w64-qt6-tools-6.10.1-1.src.tar.zst.sig \
+              mingw-w64-qt6-tools-6.10.1-1.src.tar.zst
+          tar -xf mingw-w64-qt6-tools-6.10.1-1.src.tar.zst
+          cd mingw-w64-qt6-tools
+          rm PKGBUILD
+          cp -pv ../PKGBUILD .
+          makepkg --install \
+                  --noconfirm \
+                  CC=cc \
+                  CXX=c++ \
+                  PKGDEST=${PWD}/../../packages \
+                  PACKAGER="Huang <hly1204@qq.com>"
+
+      - name: Build qt6-translations
+        shell: msys2 {0}
+        run: |
+          cd qt6-translations
+          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-translations-6.10.1-1.src.tar.zst
+          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-translations-6.10.1-1.src.tar.zst.sig
+          gpg --verify \
+              mingw-w64-qt6-translations-6.10.1-1.src.tar.zst.sig \
+              mingw-w64-qt6-translations-6.10.1-1.src.tar.zst
+          tar -xf mingw-w64-qt6-translations-6.10.1-1.src.tar.zst
+          cd mingw-w64-qt6-translations
+          rm PKGBUILD
+          cp -pv ../PKGBUILD .
+          makepkg --install \
+                  --noconfirm \
+                  CC=cc \
+                  CXX=c++ \
+                  PKGDEST=${PWD}/../../packages \
                   PACKAGER="Huang <hly1204@qq.com>"
 
       - name: Upload
