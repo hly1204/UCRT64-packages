@@ -9,18 +9,19 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { name: ucrt-x86_64, sys: UCRT64 }
+          - { name: ucrt-x86_64, sys: UCRT64, arch: ucrt64 }
 
     steps:
       - uses: actions/checkout@v3
 
       - uses: msys2/setup-msys2@v2
         with:
-          msystem: ${{ matrix.sys }}
+          msystem: MSYS
           update: true
           install: >-
+            git
             patch
-            mingw-w64-${{ matrix.name }}-git
+            binutils
             mingw-w64-${{ matrix.name }}-cc
             mingw-w64-${{ matrix.name }}-cmake
             mingw-w64-${{ matrix.name }}-ninja
@@ -47,12 +48,9 @@ jobs:
           cd mingw-w64-qt6-base
           rm PKGBUILD
           cp -pv ../PKGBUILD .
-          makepkg --install \
-                  --noconfirm \
-                  CC=cc \
-                  CXX=c++ \
-                  PKGDEST=${PWD}/../../packages \
-                  PACKAGER="Huang <hly1204@qq.com>"
+          MINGW_ARCH=${{ matrix.arch }} makepkg-mingw -sCLfi --noconfirm \
+                                                      PKGDEST=${PWD}/../../packages \
+                                                      PACKAGER="Huang <hly1204@qq.com>"
 
       - name: Build qt6-svg
         shell: msys2 {0}
@@ -67,12 +65,9 @@ jobs:
           cd mingw-w64-qt6-svg
           rm PKGBUILD
           cp -pv ../PKGBUILD .
-          makepkg --install \
-                  --noconfirm \
-                  CC=cc \
-                  CXX=c++ \
-                  PKGDEST=${PWD}/../../packages \
-                  PACKAGER="Huang <hly1204@qq.com>"
+          MINGW_ARCH=${{ matrix.arch }} makepkg-mingw -sCLfi --noconfirm \
+                                                      PKGDEST=${PWD}/../../packages \
+                                                      PACKAGER="Huang <hly1204@qq.com>"
 
       - name: Build qt6-tools
         shell: msys2 {0}
@@ -87,12 +82,9 @@ jobs:
           cd mingw-w64-qt6-tools
           rm PKGBUILD
           cp -pv ../PKGBUILD .
-          makepkg --install \
-                  --noconfirm \
-                  CC=cc \
-                  CXX=c++ \
-                  PKGDEST=${PWD}/../../packages \
-                  PACKAGER="Huang <hly1204@qq.com>"
+          MINGW_ARCH=${{ matrix.arch }} makepkg-mingw -sCLfi --noconfirm \
+                                                      PKGDEST=${PWD}/../../packages \
+                                                      PACKAGER="Huang <hly1204@qq.com>"
 
       - name: Build qt6-translations
         shell: msys2 {0}
@@ -107,12 +99,9 @@ jobs:
           cd mingw-w64-qt6-translations
           rm PKGBUILD
           cp -pv ../PKGBUILD .
-          makepkg --install \
-                  --noconfirm \
-                  CC=cc \
-                  CXX=c++ \
-                  PKGDEST=${PWD}/../../packages \
-                  PACKAGER="Huang <hly1204@qq.com>"
+          MINGW_ARCH=${{ matrix.arch }} makepkg-mingw -sCLfi --noconfirm \
+                                                      PKGDEST=${PWD}/../../packages \
+                                                      PACKAGER="Huang <hly1204@qq.com>"
 
       - name: Upload
         uses: actions/upload-artifact@v4
