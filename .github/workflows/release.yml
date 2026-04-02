@@ -39,14 +39,14 @@ jobs:
         shell: msys2 {0}
         run: |
           cd qt6-base
-          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-base-6.10.1-1.src.tar.zst
-          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-base-6.10.1-1.src.tar.zst.sig
+          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-base-6.11.0-1.src.tar.zst
+          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-base-6.11.0-1.src.tar.zst.sig
           gpg --verify \
-              mingw-w64-qt6-base-6.10.1-1.src.tar.zst.sig \
-              mingw-w64-qt6-base-6.10.1-1.src.tar.zst
-          tar -xf mingw-w64-qt6-base-6.10.1-1.src.tar.zst
+              mingw-w64-qt6-base-6.11.0-1.src.tar.zst.sig \
+              mingw-w64-qt6-base-6.11.0-1.src.tar.zst
+          tar -xf mingw-w64-qt6-base-6.11.0-1.src.tar.zst
           cd mingw-w64-qt6-base
-          rm PKGBUILD
+          rm -fr PKGBUILD
           cp -pv ../PKGBUILD .
           MINGW_ARCH=${{ matrix.arch }} makepkg-mingw -sCLfi --noconfirm \
                                                       PKGDEST=${PWD}/../../packages \
@@ -56,14 +56,14 @@ jobs:
         shell: msys2 {0}
         run: |
           cd qt6-svg
-          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-svg-6.10.1-1.src.tar.zst
-          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-svg-6.10.1-1.src.tar.zst.sig
+          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-svg-6.11.0-1.src.tar.zst
+          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-svg-6.11.0-1.src.tar.zst.sig
           gpg --verify \
-              mingw-w64-qt6-svg-6.10.1-1.src.tar.zst.sig \
-              mingw-w64-qt6-svg-6.10.1-1.src.tar.zst
-          tar -xf mingw-w64-qt6-svg-6.10.1-1.src.tar.zst
+              mingw-w64-qt6-svg-6.11.0-1.src.tar.zst.sig \
+              mingw-w64-qt6-svg-6.11.0-1.src.tar.zst
+          tar -xf mingw-w64-qt6-svg-6.11.0-1.src.tar.zst
           cd mingw-w64-qt6-svg
-          rm PKGBUILD
+          rm -fr PKGBUILD
           cp -pv ../PKGBUILD .
           MINGW_ARCH=${{ matrix.arch }} makepkg-mingw -sCLfi --noconfirm \
                                                       PKGDEST=${PWD}/../../packages \
@@ -73,14 +73,14 @@ jobs:
         shell: msys2 {0}
         run: |
           cd qt6-tools
-          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-tools-6.10.1-1.src.tar.zst
-          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-tools-6.10.1-1.src.tar.zst.sig
+          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-tools-6.11.0-1.src.tar.zst
+          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-tools-6.11.0-1.src.tar.zst.sig
           gpg --verify \
-              mingw-w64-qt6-tools-6.10.1-1.src.tar.zst.sig \
-              mingw-w64-qt6-tools-6.10.1-1.src.tar.zst
-          tar -xf mingw-w64-qt6-tools-6.10.1-1.src.tar.zst
+              mingw-w64-qt6-tools-6.11.0-1.src.tar.zst.sig \
+              mingw-w64-qt6-tools-6.11.0-1.src.tar.zst
+          tar -xf mingw-w64-qt6-tools-6.11.0-1.src.tar.zst
           cd mingw-w64-qt6-tools
-          rm PKGBUILD
+          rm -fr PKGBUILD
           cp -pv ../PKGBUILD .
           MINGW_ARCH=${{ matrix.arch }} makepkg-mingw -sCLfi --noconfirm \
                                                       PKGDEST=${PWD}/../../packages \
@@ -90,14 +90,14 @@ jobs:
         shell: msys2 {0}
         run: |
           cd qt6-translations
-          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-translations-6.10.1-1.src.tar.zst
-          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-translations-6.10.1-1.src.tar.zst.sig
+          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-translations-6.11.0-1.src.tar.zst
+          wget https://repo.msys2.org/mingw/sources/mingw-w64-qt6-translations-6.11.0-1.src.tar.zst.sig
           gpg --verify \
-              mingw-w64-qt6-translations-6.10.1-1.src.tar.zst.sig \
-              mingw-w64-qt6-translations-6.10.1-1.src.tar.zst
-          tar -xf mingw-w64-qt6-translations-6.10.1-1.src.tar.zst
+              mingw-w64-qt6-translations-6.11.0-1.src.tar.zst.sig \
+              mingw-w64-qt6-translations-6.11.0-1.src.tar.zst
+          tar -xf mingw-w64-qt6-translations-6.11.0-1.src.tar.zst
           cd mingw-w64-qt6-translations
-          rm PKGBUILD
+          rm -fr PKGBUILD
           cp -pv ../PKGBUILD .
           MINGW_ARCH=${{ matrix.arch }} makepkg-mingw -sCLfi --noconfirm \
                                                       PKGDEST=${PWD}/../../packages \

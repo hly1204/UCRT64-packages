@@ -3,7 +3,7 @@
 _realname=qt6-base
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-_qtver=6.10.1
+_qtver=6.11.0
 pkgver=${_qtver/-/}
 pkgrel=1
 pkgdesc="A cross-platform application and UI framework (mingw-w64)"
@@ -29,8 +29,6 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-zstd")
 _pkgfn="${_realname/6-/}-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfn}.tar.xz"
-        001-appending-qt6-to-remove-qt5-conflict.patch
-        002-fix-qtdocs-helpers-cmake.patch
         003-adjust-qmake-conf-mingw.patch
         004-qt-6.2.0-win32-g-Add-QMAKE_EXTENSION_IMPORTLIB-defaulting-to-.patch
         005-qt-6.7.0-opengl-header.patch
@@ -38,10 +36,9 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         008-freetype-fonts-fallback-dir.patch
         009-qfileinfo-undefine-mingw-stat.patch
         010-export-some-constexpr-variables.patch
-        011-qt6-windeployqt-fixes.patch)
-sha256sums=('5a6226f7e23db51fdc3223121eba53f3f5447cf0cc4d6cb82a3a2df7a65d265d'
-            'c9f61d90ba7bce89f935c3e8ea90c448a641fd206666ef2d1542f61a3a655fc9'
-            '0dac4b7c07ed52367f55cb54df5aee6966601edc579861e2504701f04c509b9b'
+        011-qt6-windeployqt-fixes.patch
+        012-qt6-windeployqt-ignore-debug.patch)
+sha256sums=('231ad85979864d914dc9568a1b71c91d6cf20d7b2021d059103bf0eb51cb755e'
             '68156b8b7717a0ce19c4b991942469171bfa048cd5c90765115a546e65669a1d'
             'ed5b61bcb367bbda459bec903d796ea45604278f577a988d602ade07ec6bf363'
             'a2afc74d181864409dc96eca368b647c0f79e25751db88e3263f2d1101edf8e4'
@@ -49,7 +46,8 @@ sha256sums=('5a6226f7e23db51fdc3223121eba53f3f5447cf0cc4d6cb82a3a2df7a65d265d'
             'e2fbd970a20773f0d914f6ffc96aafc8212192227577ec007a460e35398038bf'
             'f4261d43a142a24e5fa3b23e25813754839db84078cc8c6dc611139bf531e64a'
             '23656a7839d7dcb763d022722d723493c847914b0639bab861ddb05d823af5b7'
-            '8e51d7e56ec96e021d9834db96d337656bb58d18810abc3f6a4f01f5d9abcf25')
+            '8e51d7e56ec96e021d9834db96d337656bb58d18810abc3f6a4f01f5d9abcf25'
+            'ce3449f8202766f1ceab9b44a0e94efdbb6b6a1c833381c93136a3786de1bea7')
 
 # Use the right mkspecs file
 if [[ ${MINGW_PACKAGE_PREFIX} == *-clang-* ]]; then
@@ -71,8 +69,6 @@ prepare() {
   cd $srcdir/${_pkgfn}
 
   apply_patch_with_msg \
-    001-appending-qt6-to-remove-qt5-conflict.patch \
-    002-fix-qtdocs-helpers-cmake.patch \
     003-adjust-qmake-conf-mingw.patch \
     004-qt-6.2.0-win32-g-Add-QMAKE_EXTENSION_IMPORTLIB-defaulting-to-.patch \
     005-qt-6.7.0-opengl-header.patch \
@@ -80,6 +76,14 @@ prepare() {
     008-freetype-fonts-fallback-dir.patch \
     009-qfileinfo-undefine-mingw-stat.patch \
     011-qt6-windeployqt-fixes.patch
+
+  # Debug DLL detection is unreliable for the binaries our toolchains produce
+  # resulting in windeployqt refusing to deploy necessary DLLs. Just ignore
+  # debug/release matching for now.
+  # https://github.com/msys2/MINGW-packages/issues/6272
+  # https://github.com/msys2/MINGW-packages/issues/26612
+  apply_patch_with_msg \
+    012-qt6-windeployqt-ignore-debug.patch
 
   if [[ ${MINGW_PACKAGE_PREFIX} != *-clang-* ]]; then
     apply_patch_with_msg \
@@ -138,7 +142,7 @@ build() {
     -no-sql-psql \
     -no-sql-sqlite \
     -openssl-linked \
-    -disable-deprecated-up-to 0x060a00
+    -disable-deprecated-up-to 0x060b00
 
   PATH=$PWD/bin:$PATH ${MINGW_PREFIX}/bin/cmake --build .
 }
@@ -152,11 +156,6 @@ package_qt6-base() {
 
   install -d "$pkgdir${MINGW_PREFIX}"/share/licenses/${_realname}
   install -Dm644 $_pkgfn/LICENSES/* -t "$pkgdir${MINGW_PREFIX}"/share/licenses/${_realname}
-
-  # Restore qmake6, qtpaths6 and windeployqt6
-  ln -s "${pkgdir}"${MINGW_PREFIX}/bin/qmake-qt6 "${pkgdir}"${MINGW_PREFIX}/bin/qmake6.exe
-  ln -s "${pkgdir}"${MINGW_PREFIX}/bin/qtpaths-qt6 "${pkgdir}"${MINGW_PREFIX}/bin/qtpaths6.exe
-  ln -s "${pkgdir}"${MINGW_PREFIX}/bin/windeployqt-qt6 "${pkgdir}"${MINGW_PREFIX}/bin/windeployqt6.exe
 
   # Fix *.pri, *.bat and *.cmake files
   local PREFIX_WIN=$(cygpath -m ${MINGW_PREFIX})
